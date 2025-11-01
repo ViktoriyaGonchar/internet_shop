@@ -2,9 +2,10 @@
 
 from typing import Dict
 from models import Cart, Product
+from .base_service import BaseService
 
 
-class CartService:
+class CartService(BaseService):
     """Сервис для работы с корзиной покупок."""
     
     def __init__(self, cart: Cart, products: Dict[int, Product]):
@@ -15,8 +16,8 @@ class CartService:
             cart: Экземпляр корзины
             products: Словарь доступных товаров (id -> Product)
         """
+        super().__init__(products)
         self.cart = cart
-        self.products = products
     
     def add_product(self, product_id: int, quantity: int = 1) -> bool:
         """
@@ -29,11 +30,7 @@ class CartService:
         Returns:
             True если товар добавлен, False если товар не найден или нет в наличии
         """
-        if product_id not in self.products:
-            return False
-        
-        product = self.products[product_id]
-        if not product.in_stock:
+        if not self._validate_product_available(product_id):
             return False
         
         try:

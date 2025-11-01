@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Оплата - SHOP SHIPS{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="bi bi-credit-card text-primary"></i> Оплата заказа
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-credit-card-2-front"></i> Способ оплаты</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="paymentForm">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Выберите способ оплаты</label>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="payment_method" 
+                                   id="payment_card" value="card" checked>
+                            <label class="form-check-label" for="payment_card">
+                                <i class="bi bi-credit-card"></i> Банковская карта
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="payment_method" 
+                                   id="payment_paypal" value="paypal">
+                            <label class="form-check-label" for="payment_paypal">
+                                <i class="bi bi-paypal"></i> PayPal
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" 
+                                   id="payment_bank" value="bank">
+                            <label class="form-check-label" for="payment_bank">
+                                <i class="bi bi-bank"></i> Банковский перевод
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="cardFields">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="cardholder_name" class="form-label">Имя держателя карты</label>
+                                <input type="text" class="form-control" id="cardholder_name" 
+                                       name="cardholder_name" placeholder="JOHN DOE" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="card_number" class="form-label">Номер карты</label>
+                                <input type="text" class="form-control" id="card_number" 
+                                       name="card_number" placeholder="1234 5678 9012 3456" 
+                                       maxlength="19" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" 
+                                       name="cvv" placeholder="123" maxlength="4" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="expiry_date" class="form-label">Срок действия</label>
+                                <input type="text" class="form-control" id="expiry_date" 
+                                       name="expiry_date" placeholder="MM/YY" maxlength="5" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="paypalFields" style="display: none;">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> После подтверждения вы будете перенаправлены на страницу PayPal для завершения оплаты.
+                        </div>
+                    </div>
+                    
+                    <div id="bankFields" style="display: none;">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> После подтверждения заказа вам будут отправлены реквизиты для банковского перевода.
+                        </div>
+                        <div class="mb-3">
+                            <label for="bank_account" class="form-label">Номер счёта (опционально)</label>
+                            <input type="text" class="form-control" id="bank_account" 
+                                   name="bank_account" placeholder="Укажите номер счёта для перевода">
+                        </div>
+                    </div>
+                    
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="terms" required>
+                        <label class="form-check-label" for="terms">
+                            Я согласен с <a href="#" target="_blank">условиями оплаты</a> и 
+                            <a href="#" target="_blank">политикой конфиденциальности</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="bi bi-lock-fill"></i> Оплатить {{ currency_symbol }}{{ "%.2f"|format(total) }}
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning">
+            <i class="bi bi-shield-check"></i> <strong>Безопасная оплата</strong><br>
+            Все транзакции защищены современными методами шифрования. Ваши данные в безопасности.
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card shadow sticky-top" style="top: 20px;">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Детали заказа</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Товаров в заказе:</strong>
+                    <ul class="list-unstyled mt-2">
+                        {% for product_id, item_data in items.items() %}
+                            <li class="small">
+                                {{ item_data['product'].name }} x{{ item_data['quantity'] }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <span class="fs-5">Итого:</span>
+                    <strong class="text-primary fs-4">{{ currency_symbol }}{{ "%.2f"|format(total) }}</strong>
+                </div>
+                <a href="{{ url_for('checkout') }}" class="btn btn-outline-secondary w-100 mt-3">
+                    <i class="bi bi-arrow-left"></i> Назад
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentMethod = document.querySelectorAll('input[name="payment_method"]');
+    const cardFields = document.getElementById('cardFields');
+    const paypalFields = document.getElementById('paypalFields');
+    const bankFields = document.getElementById('bankFields');
+    
+    paymentMethod.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+        if (this.value === 'card') {
+            cardFields.style.display = 'block';
+            paypalFields.style.display = 'none';
+            bankFields.style.display = 'none';
+        } else if (this.value === 'paypal') {
+            cardFields.style.display = 'none';
+            paypalFields.style.display = 'block';
+            bankFields.style.display = 'none';
+        } else if (this.value === 'bank') {
+            cardFields.style.display = 'none';
+            paypalFields.style.display = 'none';
+            bankFields.style.display = 'block';
+        }
+        });
+    });
+    
+    // Форматирование номера карты
+    const cardNumber = document.getElementById('card_number');
+    if (cardNumber) {
+        cardNumber.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = formattedValue;
+        });
+    }
+    
+    // Форматирование срока действия
+    const expiryDate = document.getElementById('expiry_date');
+    if (expiryDate) {
+        expiryDate.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        });
+    }
+});
+</script>
+{% endblock %}
+

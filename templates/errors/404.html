@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Страница не найдена{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <i class="bi bi-exclamation-triangle display-1 text-warning"></i>
+    <h1 class="display-4 mt-4">404</h1>
+    <p class="lead text-muted">Страница не найдена</p>
+    <a href="{{ url_for('public_index') }}" class="btn btn-primary btn-lg">
+        <i class="bi bi-house"></i> Вернуться на главную
+    </a>
+</div>
+{% endblock %}
+

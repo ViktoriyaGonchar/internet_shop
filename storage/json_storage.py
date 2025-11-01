@@ -4,9 +4,10 @@ import json
 import os
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+from .base_storage import IStorage
 
 
-class JSONStorage:
+class JSONStorage(IStorage):
     """Класс для работы с JSON-файлами для хранения данных."""
     
     def __init__(self, data_dir: str = "data"):

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Панель управления - SHOP SHIPS{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="bi bi-speedometer2 text-primary"></i> Панель управления
+        </h2>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1">Всего товаров</h6>
+                        <h3 class="mb-0">{{ stats.total_products }}</h3>
+                    </div>
+                    <i class="bi bi-box-seam" style="font-size: 3rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1">В наличии</h6>
+                        <h3 class="mb-0">{{ stats.available_products }}</h3>
+                    </div>
+                    <i class="bi bi-check-circle" style="font-size: 3rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1">Всего заказов</h6>
+                        <h3 class="mb-0">{{ stats.total_orders }}</h3>
+                    </div>
+                    <i class="bi bi-receipt" style="font-size: 3rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1">Выручка</h6>
+                        <h3 class="mb-0">{{ currency_symbol }}{{ "%.0f"|format(stats.total_revenue) }}</h3>
+                    </div>
+                    <i class="bi bi-cash-coin" style="font-size: 3rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-box"></i> Управление товарами
+                </h5>
+                <p class="card-text text-muted">Добавляйте, редактируйте и удаляйте товары</p>
+                <a href="{{ url_for('admin_products') }}" class="btn btn-primary">
+                    <i class="bi bi-arrow-right"></i> Перейти к товарам
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-receipt"></i> Управление заказами
+                </h5>
+                <p class="card-text text-muted">Просматривайте историю заказов и их детали</p>
+                <a href="{{ url_for('admin_orders') }}" class="btn btn-primary">
+                    <i class="bi bi-arrow-right"></i> Перейти к заказам
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if stats.total_orders > 0 %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title">Средний чек</h5>
+                <h2 class="text-primary">{{ currency_symbol }}{{ "%.2f"|format(stats.avg_order) }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

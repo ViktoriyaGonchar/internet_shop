@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - SHOP SHIPS{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-4 text-center mb-4">
+            <i class="bi bi-shop text-primary"></i> Добро пожаловать в SHOP SHIPS
+        </h1>
+        <p class="lead text-center text-muted">Интернет-магазин с лучшими товарами</p>
+    </div>
+</div>
+
+<!-- Search Bar -->
+<div class="row mb-5">
+    <div class="col-md-8 mx-auto">
+        <form action="{{ url_for('search') }}" method="GET" class="d-flex">
+            <input class="form-control form-control-lg me-2" type="search" 
+                   name="q" placeholder="Поиск товаров..." aria-label="Search">
+            <button class="btn btn-primary btn-lg" type="submit">
+                <i class="bi bi-search"></i> Найти
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Products Grid -->
+{% if products %}
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-3">
+                            {% if product.in_stock %}
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i> В наличии
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-x-circle"></i> Нет в наличии
+                                </span>
+                            {% endif %}
+                        </div>
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text text-muted flex-grow-1">{{ product.description }}</p>
+                        <div class="mt-auto">
+                            <h4 class="text-primary mb-3">{{ currency_symbol }}{{ "%.2f"|format(product.price) }}</h4>
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('product_detail', product_id=product.id) }}" 
+                                   class="btn btn-outline-primary">
+                                    <i class="bi bi-eye"></i> Подробнее
+                                </a>
+                                {% if product.in_stock %}
+                                <form action="{{ url_for('cart_add') }}" method="POST" class="mt-2">
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="bi bi-cart-plus"></i> В корзину
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-inbox display-1 text-muted"></i>
+        <h3 class="mt-3 text-muted">Каталог пуст</h3>
+        <p class="text-muted">Товары временно отсутствуют. Зайдите позже!</p>
+    </div>
+{% endif %}
+{% endblock %}
+

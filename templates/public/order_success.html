@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Заказ оформлен - SHOP SHIPS{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto text-center">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+                <h1 class="display-4 mt-4 mb-3">Заказ успешно оформлен!</h1>
+                <p class="lead text-muted mb-4">Спасибо за ваш заказ!</p>
+                
+                <div class="alert alert-info">
+                    <h5>Номер заказа: <strong>#{{ order.id }}</strong></h5>
+                    <p class="mb-1">Дата: {{ order.created_at[:19] }}</p>
+                    <p class="mb-0">Сумма: <strong>{{ currency_symbol }}{{ "%.2f"|format(order.total) }}</strong></p>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Детали заказа</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Товар</th>
+                                    <th>Количество</th>
+                                    <th>Цена</th>
+                                    <th>Сумма</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product_id, item_data in items.items() %}
+                                    <tr>
+                                        <td>{{ item_data['product'].name }}</td>
+                                        <td>{{ item_data['quantity'] }}</td>
+                                        <td>{{ currency_symbol }}{{ "%.2f"|format(item_data['product'].price) }}</td>
+                                        <td>{{ currency_symbol }}{{ "%.2f"|format(item_data['product'].price * item_data['quantity']) }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                    <td colspan="3" class="text-end"><strong>Итого:</strong></td>
+                                    <td><strong>{{ currency_symbol }}{{ "%.2f"|format(order.total) }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('public_index') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-house"></i> Вернуться на главную
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
