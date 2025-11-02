@@ -13,6 +13,7 @@ class Product:
     description: str
     price: float
     in_stock: bool = True
+    image: Optional[str] = None
     
     def to_dict(self) -> dict:
         """Преобразует объект Product в словарь."""
@@ -26,7 +27,8 @@ class Product:
             name=data['name'],
             description=data['description'],
             price=data['price'],
-            in_stock=data.get('in_stock', True)
+            in_stock=data.get('in_stock', True),
+            image=data.get('image', None)
         )
     
     def __str__(self) -> str:

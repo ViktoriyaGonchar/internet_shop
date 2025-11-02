@@ -393,12 +393,13 @@ def admin_product_add():
             return render_template('admin/product_form.html', mode='add')
         
         in_stock = request.form.get('in_stock') == 'on'
+        image = request.form.get('image', '').strip() or None
         
         if not name:
             flash('Название товара обязательно.', 'danger')
             return render_template('admin/product_form.html', mode='add')
         
-        product = Product(id=0, name=name, description=description, price=price, in_stock=in_stock)
+        product = Product(id=0, name=name, description=description, price=price, in_stock=in_stock, image=image)
         product = data_manager.add_product(product)
         flash(f'Товар "{product.name}" успешно добавлен!', 'success')
         return redirect(url_for('admin_products'))
@@ -429,6 +430,7 @@ def admin_product_edit(product_id):
             return render_template('admin/product_form.html', mode='edit', product=product)
         
         in_stock = request.form.get('in_stock') == 'on'
+        image = request.form.get('image', '').strip() or None
         
         if not name:
             flash('Название товара обязательно.', 'danger')
@@ -439,7 +441,8 @@ def admin_product_edit(product_id):
             name=name, 
             description=description, 
             price=price, 
-            in_stock=in_stock
+            in_stock=in_stock,
+            image=image
         )
         
         if updated:

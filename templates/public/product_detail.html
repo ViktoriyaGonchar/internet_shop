@@ -16,6 +16,19 @@
             <div class="card-body p-4">
                 <div class="row">
                     <div class="col-md-6">
+                        {% if product.image %}
+                        <img src="{{ url_for('static', filename=product.image) }}" 
+                             class="img-fluid rounded mb-4" 
+                             alt="{{ product.name }}"
+                             style="max-height: 500px; width: 100%; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center rounded mb-4" 
+                             style="height: 500px;">
+                            <i class="bi bi-image text-muted" style="font-size: 5rem;"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
                         <div class="mb-3">
                             {% if product.in_stock %}
                                 <span class="badge bg-success fs-6">
@@ -30,27 +43,33 @@
                         <h1 class="display-5 mb-4">{{ product.name }}</h1>
                         <p class="lead text-muted">{{ product.description }}</p>
                     </div>
-                    <div class="col-md-6 text-end">
-                        <h2 class="display-4 text-primary mb-4">
-                            {{ currency_symbol }}{{ "%.2f"|format(product.price) }}
-                        </h2>
-                        {% if product.in_stock %}
-                            <form action="{{ url_for('cart_add') }}" method="POST" class="d-inline">
-                                <input type="hidden" name="product_id" value="{{ product.id }}">
-                                <div class="input-group mb-3" style="max-width: 200px; margin-left: auto;">
-                                    <label class="input-group-text" for="quantity">Количество</label>
-                                    <input type="number" class="form-control" 
-                                           name="quantity" id="quantity" value="1" min="1" max="100">
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-lg w-100">
-                                    <i class="bi bi-cart-plus"></i> Добавить в корзину
-                                </button>
-                            </form>
-                        {% else %}
-                            <button class="btn btn-secondary btn-lg w-100" disabled>
-                                <i class="bi bi-x-circle"></i> Товар недоступен
-                            </button>
-                        {% endif %}
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="display-4 text-primary mb-0">
+                                {{ currency_symbol }}{{ "%.2f"|format(product.price) }}
+                            </h2>
+                            <div style="max-width: 300px;">
+                                {% if product.in_stock %}
+                                    <form action="{{ url_for('cart_add') }}" method="POST">
+                                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text" for="quantity">Количество</label>
+                                            <input type="number" class="form-control" 
+                                                   name="quantity" id="quantity" value="1" min="1" max="100">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                                            <i class="bi bi-cart-plus"></i> Добавить в корзину
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <button class="btn btn-secondary btn-lg w-100" disabled>
+                                        <i class="bi bi-x-circle"></i> Товар недоступен
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

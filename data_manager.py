@@ -102,6 +102,8 @@ class DataManager:
             product.price = kwargs['price']
         if 'in_stock' in kwargs:
             product.in_stock = kwargs['in_stock']
+        if 'image' in kwargs:
+            product.image = kwargs['image']
         
         self.product_repo.save(product)
         return product
