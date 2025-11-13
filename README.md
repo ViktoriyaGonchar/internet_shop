@@ -239,5 +239,5 @@ internet_shop/
 - Детальная статистика
 
 ---
-
+Made by Viktoriya Gonchar
 
